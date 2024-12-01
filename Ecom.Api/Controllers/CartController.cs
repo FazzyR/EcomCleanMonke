@@ -42,7 +42,49 @@ namespace Ecom.Api.Controllers
 
         }
 
+        [HttpPost("add-item")]
+        public async Task<IActionResult> AddItemToCart([FromBody] CartItem item)
+        {
+            var useremail = GetUserEmailFromToken(HttpContext);
+            if (useremail == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
 
+            var cart =  _cartRepository.GetCartByUserEmailAsync(useremail);
+            if (cart == null)
+            {
+                cart = new Cart { UserEmail = useremail };
+                await _cartRepository.CreateCartAsync(cart);
+            }
+
+            await _cartRepository.AddItemCart(useremail, item);
+             cart = _cartRepository.GetCartByUserEmailAsync(useremail);
+            return Ok(cart);
+        }
+
+        [HttpPost("Delete-item")]
+        public async Task<IActionResult> DeleteItemFromCart(string id)
+        {
+            var useremail = GetUserEmailFromToken(HttpContext);
+            if (useremail == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var cart = _cartRepository.GetCartByUserEmailAsync(useremail);
+            if (cart == null)
+            {
+                cart = new Cart { UserEmail = useremail };
+                await _cartRepository.CreateCartAsync(cart);
+                return NoContent();
+            }
+
+            await  _cartRepository.DeleteCartItemAsync(useremail,id);
+
+             cart = _cartRepository.GetCartByUserEmailAsync(useremail);
+            return Ok(cart);
+        }
 
 
 

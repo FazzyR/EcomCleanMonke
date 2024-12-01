@@ -84,6 +84,12 @@ builder.Services.AddScoped<ICart>(sp =>
     var client = sp.GetRequiredService<IMongoClient>();
     return new CartRepository(settings.DatabaseName, client);
 });
+builder.Services.AddScoped<IOrder>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    var client = sp.GetRequiredService<IMongoClient>();
+    return new OrderRepository(settings.DatabaseName, client);
+});
 
 builder.Services.AddAuthentication(options =>
 {

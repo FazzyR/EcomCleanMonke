@@ -12,8 +12,8 @@ namespace Ecom.Infrastructure.Repositories
 {
     public class CartRepository:ICart
     {
-        private readonly IMongoCollection<Cart> _carts;
-
+            private readonly IMongoCollection<Cart> _carts;
+        
         public CartRepository(string databaseName, IMongoClient mongoClient)
         {
             var database = mongoClient.GetDatabase("Ecom");
@@ -36,13 +36,61 @@ namespace Ecom.Infrastructure.Repositories
             return Task.CompletedTask;
 
         }
-        public  Task UpdateCartAsync(Cart cart) 
+
+        public Task AddItemCart(string useremail, CartItem cartItem)
         {
+            var Cart = GetCartByUserEmailAsync(useremail);
+           
+
+             Cart.AddItem(cartItem);
+
+            UpdateCartAsync(Cart);
+
 
 
             return Task.CompletedTask;
-                }
 
-       
+        }
+
+
+        public  Task UpdateCartAsync(Cart cart) 
+        {
+            var filter = Builders<Cart>.Filter.Eq(u => u.Id, cart.Id);
+            var update = Builders<Cart>.Update
+                .Set(u => u.Items, cart.Items)
+                .Set(u=>u.Price,cart.Price);
+
+         
+
+           
+            _carts.UpdateOne(filter, update);
+
+
+            return Task.CompletedTask;
+         }
+
+        public Task DeleteCartItemAsync(string useremail,string ItemId)
+        {
+
+
+
+            var Cart=_carts.Find(c => c.UserEmail ==useremail).FirstOrDefault();
+
+           
+               if(Cart != null)
+            {
+                Cart.RemoveItem(ItemId);
+
+                UpdateCartAsync(Cart);
+            }
+           
+            
+          
+            return Task.CompletedTask;
+
+
+        }
+
+
     }
 }

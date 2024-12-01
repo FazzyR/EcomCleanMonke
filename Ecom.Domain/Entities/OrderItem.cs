@@ -2,16 +2,14 @@
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Ecom.Domain.Entities
 {
-    public class CartItem
+    public class OrderItem
     {
-
 
         [BsonRepresentation(BsonType.ObjectId)]
 
@@ -20,8 +18,6 @@ namespace Ecom.Domain.Entities
         public int Quantity { get; set; }
 
         public decimal productprice { get; set; }
-
-
 
 
     }

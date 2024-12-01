@@ -13,7 +13,7 @@ namespace Ecom.Infrastructure.Repositories
 {
     public class ProductRepository:IProduct
     {
-        private readonly IMongoCollection<Product> _products;
+         private readonly IMongoCollection<Product> _products;
 
         public ProductRepository(string databaseName, IMongoClient mongoClient)
         {

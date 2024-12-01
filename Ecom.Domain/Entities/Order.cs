@@ -9,24 +9,22 @@ using System.Threading.Tasks;
 
 namespace Ecom.Domain.Entities
 {
-    public class Cart
+    public class Order
     {
-
-
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public string UserEmail { get; set; } // This links the cart to a specific user
+        public string UserEmail { get; set; }
 
-        public List<CartItem> Items { get; set; } = new List<CartItem>();
+        public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
 
         [Required]
         public decimal Price { get; set; } = 0;
 
 
-        public void AddItem(CartItem newItem)
+        public void AddItem(OrderItem newItem)
         {
             Items.Add(newItem);
             Price += newItem.productprice * newItem.Quantity;
@@ -41,6 +39,5 @@ namespace Ecom.Domain.Entities
                 Items.Remove(itemToRemove);
             }
         }
-
     }
 }
